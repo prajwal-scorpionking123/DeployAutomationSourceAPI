@@ -13,6 +13,12 @@ type Source struct {
 	SourceLink    string             `json:"sourcelink,omitempty" bson:"sourcelink,omitempty"`
 	Ticket        string             `json:"ticket,omitempty" bson:"ticket,omitempty"`
 	Timestamp     time.Time          `json:"timestamp,omitempty" bson:"timestamp,omitempty"`
+	IsApproved    bool               `json:"isapproved,omitempty"  bson:"isapproved,omitempty"`
+	IsRequested   bool               `json:"isrequested" bson:"isrequested"`
+	IsVarified    bool               `json:"isvarified,omitempty"  bson:"isvarified,omitempty"`
+}
+type ValueAttr struct {
+	Value bool `json:"value"`
 }
 type Deployment struct {
 	SourceLink      string `json:"sourcelink,omitempty" bson:"sourcelink,omitempty"`

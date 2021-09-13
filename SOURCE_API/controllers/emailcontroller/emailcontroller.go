@@ -66,5 +66,6 @@ func OtpMail(c *gin.Context) {
 	fmt.Println(res)
 	c.JSON(http.StatusOK, gin.H{
 		"status": "varification opt sent",
+		"otp":    otp,
 	})
 }

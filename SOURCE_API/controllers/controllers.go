@@ -15,6 +15,7 @@ import (
 	"github.com/team_six/SOURCE_API/helpers"
 	"github.com/team_six/SOURCE_API/models"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -42,6 +43,9 @@ func PostLink(c *gin.Context) {
 		return
 	}
 	source.Timestamp = time.Now()
+	source.IsApproved = true
+	// source.IsRequested = false
+	source.IsVarified = true
 	if !FileExists(source.SourceLink) {
 		c.JSON(http.StatusBadRequest, gin.H{"status": "there is no file entered path"})
 		return
@@ -52,6 +56,98 @@ func PostLink(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"source": res})
+}
+func ToggleVarified(c *gin.Context) {
+	var params = c.Param("id")
+	var value models.ValueAttr
+	var source models.Source
+	id, _ := primitive.ObjectIDFromHex(params)
+
+	filter := bson.M{"_id": id}
+	if err := c.Bind(&value); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	update := bson.D{
+		{"$set", bson.D{
+			{
+				"isvarified", value.Value,
+			},
+		},
+		},
+	}
+	err := collection.FindOneAndUpdate(context.TODO(), filter, update).Decode(&source)
+
+	if err != nil {
+		helpers.GetError(err, c)
+		return
+	}
+
+	// user.ID = id
+
+	c.JSON(http.StatusOK, gin.H{"source": source})
+}
+func ToggleRequested(c *gin.Context) {
+
+	var params = c.Param("id")
+	var value models.ValueAttr
+	var source models.Source
+	id, _ := primitive.ObjectIDFromHex(params)
+
+	filter := bson.M{"_id": id}
+	if err := c.Bind(&value); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	update := bson.D{
+		{"$set", bson.D{
+			{
+				"isrequested", value.Value,
+			},
+		},
+		},
+	}
+	err := collection.FindOneAndUpdate(context.TODO(), filter, update).Decode(&source)
+
+	if err != nil {
+		helpers.GetError(err, c)
+		return
+	}
+
+	// user.ID = id
+
+	c.JSON(http.StatusOK, gin.H{"source": source})
+}
+func ToggleApproved(c *gin.Context) {
+
+	var params = c.Param("id")
+	var value models.ValueAttr
+	var source models.Source
+	id, _ := primitive.ObjectIDFromHex(params)
+
+	filter := bson.M{"_id": id}
+	if err := c.Bind(&value); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	update := bson.D{
+		{"$set", bson.D{
+			{
+				"isapproved", value.Value,
+			},
+		},
+		},
+	}
+	err := collection.FindOneAndUpdate(context.TODO(), filter, update).Decode(&source)
+
+	if err != nil {
+		helpers.GetError(err, c)
+		return
+	}
+
+	// user.ID = id
+
+	c.JSON(http.StatusOK, gin.H{"source": source})
 }
 func GetSources(c *gin.Context) {
 	c.Header("content-type", "application/json")
