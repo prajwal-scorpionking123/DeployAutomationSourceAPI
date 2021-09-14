@@ -110,8 +110,7 @@ func DeployFiles(c *gin.Context) {
 	for _, p := range paths {
 		fmt.Println(p)
 	}
-	metadata := `{"title": "hello world", "description": "Multipart related upload test"}`
-
+	metadata := deployMeta.DestinationLink
 	part.Write([]byte(metadata))
 
 	log.Println(f)
