@@ -142,6 +142,7 @@ func DeployFiles(c *gin.Context) {
 		mediaHeader.Set("Content-Disposition", fmt.Sprintf("attachment; filename=\"%v\".", fileName))
 		mediaHeader.Set("Content-ID", "media")
 		mediaHeader.Set("Content-Filename", fileName)
+		mediaHeader.Set("Content-Ticket", deployMeta.Ticket)
 		mediaHeader.Set("Content-Filepath", paths[i])
 
 		mediaPart, err := writer.CreatePart(mediaHeader)
